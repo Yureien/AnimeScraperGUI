@@ -1,5 +1,8 @@
-# AnimeScraperWebUI
+# Anime Scraper (GUI)
 This is a GUI version of [anime-scrapers](https://github.com/jQwotos/anime-scrapers) with extra features!
+It was built using Python, Django, Python Requests module, and Python BeautifulSoup4 module.
+
+With this, you can stream or download animes from many sites, which are given in the [anime-scrapers](https://github.com/jQwotos/anime-scrapers) repository.
 
 ## Installation
 
