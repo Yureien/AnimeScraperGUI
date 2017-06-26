@@ -27,7 +27,7 @@ sudo ./run
 ```
 **(Any OS users with or without admin account)** To run on any port of your choice -
 ```
-python manage.py runserver <PORT_NAME_FROM_1024_TO_65536>
+python manage.py runserver <PORT_NUMBER_FROM_1024_TO_65536>
 ```
 ## Contribution
 
