@@ -105,6 +105,7 @@ ENV/
 
 # DB related files
 *.sqlite3
+migrations/
 
 # Emacs files
 *#

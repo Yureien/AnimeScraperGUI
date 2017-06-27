@@ -1,0 +1,29 @@
+{% extends "Scraper/base.html" %}
+{% block title %}Login{% endblock %}
+{% block nav_content %}{% endblock %}
+{% block content %}
+<h2 class="header center orange-text">Login</h2>
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {% if error_msg %}
+    <div class="row">
+	<div class="col s12">
+	    <div class="card-panel red">
+		<span class="white-text">{{ error_msg }}</span>
+	    </div>
+	</div>
+    </div>
+    {% endif %}
+    <div class="col center">
+	<div class="input-field row s12 m4 center">
+	    <input id="username" name="username" type="text" class="validate">
+            <label for="username">Username</label>
+        </div>
+	<div class="input-field row s12 m4 center">
+	    <input id="password" name="password" type="password" class="validate">
+            <label for="password">Password</label>
+        </div>
+	<button class="waves-effect waves-light btn row s12 m6 center" type="submit" value="Submit">Submit</button>
+    </div>
+</form>
+{% endblock %}

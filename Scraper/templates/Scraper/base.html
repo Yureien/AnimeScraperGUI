@@ -1,0 +1,70 @@
+{% load staticfiles %}
+{% load tags %}
+{% user_logged_in request as logged_in %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<title>{% block title %}Default{% endblock %}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+	<link rel="stylesheet" href="{% static 'Scraper/css/material-icons.css' %}" />
+	<link rel="stylesheet" href="{% static 'Scraper/css/materialize.min.css' %}" />
+    
+	<script type="text/javascript" src="{% static 'Scraper/js/jquery-3.2.1.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'Scraper/js/materialize.min.js' %}"></script>
+    </head>
+    <body>
+	{% if logged_in %}
+	<ul id="login-options" class="dropdown-content">
+	    <li><a href="{% url 'logout' %}">Logout</a></li>
+	</ul>
+	{% endif %}
+	<nav class="light-blue lighten-1" role="navigation">
+	    <div class="nav-wrapper container">
+		<a id="logo-container" href="{% url 'index' %}" class="brand-logo">{% app_name request %}</a>
+		{% block nav_content %}
+		<ul class="right hide-on-med-and-down">
+		    <li><a href="{% url 'index' %}">Home</a></li>
+		    {% if logged_in %}
+		    <li>
+			<a class="dropdown-button"  data-activates="login-options">{% user_name request %} <i class="material-icons right">arrow_drop_down</i></a>
+		    </li>
+		    {% else %}
+		    <li><a href="{% url 'login' %}">Login</a></li>
+		    {% endif %}
+		</ul>
+		<ul id="nav-mobile" class="side-nav">
+		    <li><a href="{% url 'index' %}">Home</a></li>
+		    {% if logged_in %}
+		    <li>
+			<a class="dropdown-button"  data-activates="login-options">{% user_name request %} <i class="material-icons right">arrow_drop_down</i></a>
+		    </li>
+		    {% else %}
+		    <li><a href="{% url 'login' %}">Login</a></li>
+		    {% endif %}
+		</ul>
+		<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+		<script type="text/javascript">
+		 $(".button-collapse").sideNav();
+		 $(".dropdown-button").dropdown();
+		</script>
+		{% endblock %}
+	    </div>
+	</nav>
+	<div class="section no-pad-bot" id="index-banner">
+	    <div class="container">
+		{% block content %}
+		<br><br>
+		<h1 class="header center orange-text">{% app_name request %}</h1>
+		<div class="row center">
+		    <h5 class="header col s12 light">A scraper which can scrape anime from different websites and download them.</h5>
+		</div>
+		<div class="row center">
+		    <a href="{% url 'search-page' %}" id="download-button" class="btn-large waves-effect waves-light orange">Search</a>
+		</div>
+		<br><br>
+		{% endblock %}
+	    </div>
+	</div>
+    </body>
+</html>

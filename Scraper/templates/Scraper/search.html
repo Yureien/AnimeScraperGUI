@@ -1,0 +1,23 @@
+{% extends 'Scraper/base.html' %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<h1 class="header center orange-text">Search</h1>
+<div class="col center">
+    <div class="row s12 m6 center">
+	<input id="search-text" type="text">
+    </div>
+    <div class="row s12 m6 center">
+	<button class="waves-effecr waves-light btn" id="search-btn">Search</button>
+    </div>
+    <script type="text/javascript">
+     var search_url = "{% url 'search' 'temp-text' %}";
+     $("#search-btn").click(function() {
+	 let search_text = $("#search-text").val();
+	 if (search_text) {
+	     window.open(search_url
+		 .replace("temp-text/", search_text), "_self");
+	 }
+     });
+    </script>
+</div>
+{% endblock %}

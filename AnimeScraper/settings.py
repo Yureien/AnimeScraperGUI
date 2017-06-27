@@ -25,7 +25,7 @@ SECRET_KEY = '4d533xi_an_pzd8j&*#92(!(dc8zg3oc^()$rev+vtv^*pegcx'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.102', 'localhost']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Scraper.apps.ScraperConfig',
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'tags': 'Scraper.templatetags.tags',
+            }
         },
     },
 ]
