@@ -1,0 +1,3 @@
+[submodule "Scraper/scrapers"]
+	path = Scraper/scrapers
+	url = git@github.com:jQwotos/anime-scrapers.git
