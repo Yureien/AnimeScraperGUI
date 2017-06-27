@@ -9,13 +9,18 @@
 
 	<link rel="stylesheet" href="{% static 'Scraper/css/material-icons.css' %}" />
 	<link rel="stylesheet" href="{% static 'Scraper/css/materialize.min.css' %}" />
-    
+
 	<script type="text/javascript" src="{% static 'Scraper/js/jquery-3.2.1.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'Scraper/js/materialize.min.js' %}"></script>
     </head>
     <body>
 	{% if logged_in %}
 	<ul id="login-options" class="dropdown-content">
+	    <li><a href="{% url 'logout' %}">Logout</a></li>
+	</ul>
+	{% endif %}
+  {% if logged_in %}
+	<ul id="login-options-mobile" class="dropdown-content">
 	    <li><a href="{% url 'logout' %}">Logout</a></li>
 	</ul>
 	{% endif %}
@@ -37,7 +42,7 @@
 		    <li><a href="{% url 'index' %}">Home</a></li>
 		    {% if logged_in %}
 		    <li>
-			<a class="dropdown-button"  data-activates="login-options">{% user_name request %} <i class="material-icons right">arrow_drop_down</i></a>
+			<a class="dropdown-button"  data-activates="login-options-mobile">{% user_name request %} <i class="material-icons right">arrow_drop_down</i></a>
 		    </li>
 		    {% else %}
 		    <li><a href="{% url 'login' %}">Login</a></li>
