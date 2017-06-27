@@ -4,6 +4,9 @@ It was built using Python, Django, Python Requests module, and Python BeautifulS
 
 With this, you can stream or download animes from many sites, which are given in the [anime-scrapers](https://github.com/jQwotos/anime-scrapers) repository.
 
+This is actually a web UI, in other words, a local server. So, you can open the server website on any device on the local network by installing this repo on a PC, or even remotely if you configure it that way (Instructions not included for remote setup. Just a tip: Use localtunnel). 
+
+Remember, this is a WIP.
 ## Installation
 
 Install `django`, `requests` and `bs4` via any installer of your choice like `pip`.
@@ -29,6 +32,8 @@ sudo ./run
 ```
 python manage.py runserver <PORT_NUMBER_FROM_1024_TO_65536>
 ```
+
+Then go to [localhost](http://localhost) from the PC it is installed in.
 ## Contribution
 
 Fork, clone, make changes, push, create PR. I will accept the PR or ask you to make changes if required.
