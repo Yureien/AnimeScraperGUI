@@ -22,6 +22,8 @@ def user_name(request):
     if request.user.is_authenticated:
         if request.user.first_name:
             return request.user.first_name
+        elif request.user.last_name:
+            return request.user.last_name
         else:
             return request.user.username
     return "Hacker alert"
