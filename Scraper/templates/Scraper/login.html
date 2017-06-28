@@ -2,7 +2,7 @@
 {% block title %}Login{% endblock %}
 {% block nav_content %}{% endblock %}
 {% block content %}
-<h2 class="header center orange-text">Login</h2>
+<h3 class="header center orange-text">Login</h3>
 <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     {% if error_msg %}
