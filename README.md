@@ -17,8 +17,11 @@ sudo pip install django requests bs4
 ```
 Then install this with the following commands -
 ```
-git clone <Repo URL. I hope you know what this is.>
-cd AnimeScraperWebUI
+git clone --recursive https://github.com/FadedCoder/AnimeScraperGUI.git
+**OR IF YOU HAVE SSH**
+git clone --recursive git@github.com:FadedCoder/AnimeScraperGUI.git
+
+cd AnimeScraperGUI
 python manage.py makemigrations
 python manage.py migrate
 ```

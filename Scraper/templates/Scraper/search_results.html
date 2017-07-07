@@ -4,41 +4,45 @@
 <h3 class="header center orange-text">Search Results</h3>
 <h5 class="header center light">You searched for: {{ search_text }}</h5>
 <br>
-{% if not i_results or not d_results %}
+{% if i_results or d_results %}
+{% for i in results_loop %}
+<h4 class="center">{{ i }}</h4>
 <br>
-<h4 class="center">Nothing found :(</h4>
-{% else %}
-{% for x in search_types %}
-<h4 class="center">{{ x }}</h4>
-<br>
-<table class="highlight centered">
+<table class="highlight">
     <thead>
-    <tr>
-	<th>Title</th>
-	<th>Type</th>
-	<th>Host</th>
-    </tr>
+	<tr>
+	    <th>Title</th>
+	    <th>Type</th>
+	    <th>Host</th>
+	    <th>Link</th>
+	</tr>
     </thead>
     <tbody>
-	{% if x == "Info Search" %} 
+	{% if i == "Information Search" %}
 	{% for item in i_results %}
 	<tr>
 	    <td>{{ item.title }}</td>
 	    <td>{{ item.language }}</td>
 	    <td>{{ item.host }}</td>
+	    <td>{{ item.link }}</td>
 	</tr>
 	{% endfor %}
-	{% elif x == "Download Search" %}
+	{% else %}
 	{% for item in d_results %}
 	<tr>
 	    <td>{{ item.title }}</td>
 	    <td>{{ item.language }}</td>
 	    <td>{{ item.host }}</td>
+	    <td>{{ item.link }}</td>
 	</tr>
 	{% endfor %}
 	{% endif %}
     </tbody>
 </table>
+<br>
 {% endfor %}
+{% else %}
+<br>
+<h4 class="center">Nothing found :(</h4>
 {% endif %}
 {% endblock %}
