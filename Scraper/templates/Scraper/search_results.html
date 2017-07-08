@@ -14,7 +14,7 @@
 	    <th>Title</th>
 	    <th>Type</th>
 	    <th>Host</th>
-	    <th>Link</th>
+	    <th>Download</th>
 	</tr>
     </thead>
     <tbody>
@@ -24,7 +24,7 @@
 	    <td>{{ item.title }}</td>
 	    <td>{{ item.language }}</td>
 	    <td>{{ item.host }}</td>
-	    <td>{{ item.link }}</td>
+	    <td><a href="{% url 'view' item.aid %}"><i class="material-icons">play_for_work</i></a></td>
 	</tr>
 	{% endfor %}
 	{% else %}
@@ -33,7 +33,7 @@
 	    <td>{{ item.title }}</td>
 	    <td>{{ item.language }}</td>
 	    <td>{{ item.host }}</td>
-	    <td>{{ item.link }}</td>
+	    <td><a href="{% url 'view' item.aid %}"><i class="material-icons">play_for_work</i></a></td>
 	</tr>
 	{% endfor %}
 	{% endif %}

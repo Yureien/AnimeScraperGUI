@@ -12,6 +12,20 @@
 
 	<script type="text/javascript" src="{% static 'Scraper/js/jquery-3.2.1.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'Scraper/js/materialize.min.js' %}"></script>
+
+	<style>
+	 nav {
+	     overflow: hidden;
+	     position: fixed;
+	     top: 0;
+	     width: 100%;
+	 }
+
+	 .section {
+	     margin-top: 7%;
+	     /*FIXME: FIX FOR PHONES*/
+	 }
+	</style>
     </head>
     <body>
 	{% if logged_in %}

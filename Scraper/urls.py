@@ -8,4 +8,5 @@ urlpatterns = [
         views.search, name='search'),
     url(r'^login/$', views.login_user, name='login'),
     url(r'^logout/$', views.logout_user, name='logout'),
+    url(r'^view/(?P<anime_id>[0-9]+)/$', views.view, name='view'),
 ]

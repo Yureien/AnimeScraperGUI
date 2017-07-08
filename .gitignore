@@ -107,5 +107,6 @@ ENV/
 *.sqlite3
 migrations/
 
-# Emacs files
+# My files
 *#
+temp/

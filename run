@@ -2,4 +2,4 @@
 
 # Runs the server at this PC's IP address(es) -> http://192.168.0.105/ and http://localhost/
 
-python3.6 manage.py runserver 0.0.0.0:80
+python3 manage.py runserver 0.0.0.0:80

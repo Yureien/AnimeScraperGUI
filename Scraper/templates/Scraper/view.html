@@ -1,0 +1,17 @@
+{% extends "Scraper/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h3 class="header center orange-text">{{ title }}</h3>
+<br><br>
+<div class="row">
+    <div class="col s12 m3 center-align">
+	<img src="{{ pic_link }}" width='220px' alt="{{ title }}">
+    </div>
+    <div class="col s12 m9">
+	{% for x, y in description.items %}
+	<strong>{{x}}</strong>:{{y|safe}}
+	<br>
+	{% endfor %}
+    </div>
+</div>
+{% endblock %}

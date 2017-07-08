@@ -1,3 +1,4 @@
 [submodule "Scraper/anime_scrapers"]
 	path = Scraper/anime_scrapers
-	url = git@github.com:jQwotos/anime_scrapers.git
+	url = git@github.com:FadedCoder/anime_scrapers.git
+	branch = master
