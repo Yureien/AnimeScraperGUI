@@ -1,10 +1,11 @@
-from copy import deepcopy
-
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect  # , HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.views import View
+
+from difflib import SequenceMatcher
 
 from .models import AnimeResult
 
@@ -95,23 +96,48 @@ def humanize_str(string):
     return string
 
 
-def view(request, anime_id):
-    anime = get_object_or_404(AnimeResult, pk=anime_id)
-    search_anime = info_handler.search(anime.name, True)
-    details = info_handler.getDetailedInfo(
-        search_anime[0][0]['id'])[0]
-    _description = dict(details)
-    del _description['id']
-    del _description['image_url']
-    del _description['recommendations']
-    del _description['other_names']
-    del _description['creators']
-    # _description['description'] = str("<br>") + _description['description']
-    description = dict()
-    for key in _description:
-        description[humanize_str(str(key))] = _description[key]
-    return render(request, "Scraper/view.html", {
-        "title": anime.name.title(),
-        "pic_link": details['image_url'],
-        "description": description,
-    })
+class DetailView(View):
+    template_name = "Scraper/view.html"
+    # Only implementing AniDB for now to get information.
+
+    def get(self, request, anime_id):
+        anime = get_object_or_404(AnimeResult, pk=anime_id)
+        search_anime = info_handler.search(anime.name, True)[0]
+        if len(search_anime) <= 0:
+            search_anime = info_handler.search(anime.name, False)[0]
+            aid = self.find_most_similar(anime.name, search_anime)
+            details = info_handler.getDetailedInfo(aid)[0]
+        else:
+            details = info_handler.getDetailedInfo(search_anime[0]['id'])[0]
+        _description = dict(details)
+        del _description['id']
+        del _description['image_url']
+        del _description['recommendations']
+        del _description['other_names']
+        del _description['creators']
+        # _description['description'] =
+        # str("<br>") + _description['description']
+        description = dict()
+        for key in _description:
+            description[humanize_str(str(key))] = _description[key]
+        return render(request, "Scraper/view.html", {
+            "title": anime.name.title(),
+            "pic_link": details['image_url'],
+            "description": description,
+        })
+
+    def find_most_similar(self, original_txt, search_results_unfiltered):
+        highest_match = [0, -1]  # 0th term - match %, 1st term - ID
+        for item in search_results_unfiltered:
+            for i in item['titles']:
+                match = self.similar(original_txt, i)
+                if match > highest_match[0]:
+                    highest_match[0] = match
+                    highest_match[1] = item['id']
+        if highest_match[1] != -1:
+            return highest_match[1]
+        else:
+            return None
+
+    def similar(self, a, b):
+        return SequenceMatcher(None, a, b).ratio()
