@@ -5,13 +5,48 @@
 <br><br>
 <div class="row">
     <div class="col s12 m3 center-align">
-	<img src="{{ pic_link }}" width='220px' alt="{{ title }}">
+	<img class="no-reload-on-fail" src="{{ pic_link }}" width='220px' alt="{{ title }}">
+	<script>
+	 $(function() {
+   var $images = $('.reload-on-fail');
+
+   if($images.length === 0 && window.imageLocator)
+     clearInterval(window.imageLocator);
+    window.imageLocator = setInterval(function() {
+        $images.each(function() {
+            $this = $(this);
+            if (!$this.data('src')) {
+                $this.data('src', $this.prop('src'));
+            }
+
+            $this.prop('src', $this.data('src') + '?timestamp=' + new Date().getTime());
+            console.log($this.prop('src'));
+        });
+    }, 500);
+   $('img.imageClassUpdateAtInterval').error(
+             function () {   
+                 // set a broken image
+                 $(this).unbind("error").attr("src", "/assets/broken.gif"); 
+                 // setting this up in relative
+                 // position
+                 $(this).css("position", "relative");
+                 $(this).apppend("<span>Error occured</span>");
+                 $(this).find("span").css({"position": "absolute", "background-color": "#252525", "padding": ".3em", "bottom": "0"});
+	     });
+	 });
+	</script>
+	<br>
     </div>
     <div class="col s12 m9">
 	{% for x, y in description.items %}
-	<strong>{{x}}</strong>:{{y|safe}}
+	<strong>{{x}}</strong>:&nbsp;&nbsp;{{y|safe}}
 	<br>
 	{% endfor %}
     </div>
 </div>
+<br>
+<div class="divider"></div>
+<br>
+<h4 class="header center orange-text">Episodes</h4>
+<p>{{ debug_txt }}</p>
 {% endblock %}

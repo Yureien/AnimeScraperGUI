@@ -120,10 +120,25 @@ class DetailView(View):
         description = dict()
         for key in _description:
             description[humanize_str(str(key))] = _description[key]
+        anime_details = scraper_handler.resolve(anime.link)
+        episodes = list()
+        _last_id = -1
+        for x in anime_details['episodes']:
+            if _last_id == -1:
+                _last_id = x['epNum']
+                episodes.append(x)
+            else:
+                _id = x['epNum']
+                if _id > _last_id:
+                    episodes.append(x)
+                else:
+                    episodes.insert(0, x)
+                _last_id = _id
         return render(request, "Scraper/view.html", {
             "title": anime.name.title(),
             "pic_link": details['image_url'],
             "description": description,
+            "debug_txt": [x['epNum'] for x in episodes]
         })
 
     def find_most_similar(self, original_txt, search_results_unfiltered):

@@ -9,11 +9,11 @@ This is actually a web UI, in other words, a local server. So, you can open the 
 Remember, this is a WIP.
 ## Installation
 
-Install `django`, `requests` and `bs4` via any installer of your choice like `pip`.
+Install the modules listed in `requirements.txt` via any installer of your choice like `pip`.
 
 Pip install command (Windows users: Delete the word `sudo`. *May require administrator privileges.*) -
 ```
-sudo pip install django requests bs4
+sudo pip install -r requirements.txt
 ```
 Then install this with the following commands -
 ```
