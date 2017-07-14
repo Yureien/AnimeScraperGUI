@@ -23,6 +23,7 @@ git clone --recursive git@github.com:FadedCoder/AnimeScraperGUI.git
 
 cd AnimeScraperGUI
 python manage.py makemigrations
+python manage.py makemigrations Scraper
 python manage.py migrate
 ```
 ## Usage
