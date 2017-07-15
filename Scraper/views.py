@@ -5,8 +5,6 @@ from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 
-from difflib import SequenceMatcher
-
 from .models import AnimeResult
 
 from .anime_scrapers.scraper_handler import scraper_handler
@@ -108,18 +106,12 @@ class DetailView(View):
             aid = self.find_most_similar(anime.name, search_anime)
             details = info_handler.getDetailedInfo(aid)[0]
         else:
-            details = info_handler.getDetailedInfo(search_anime[0]['id'])[0]
-        _description = dict(details)
-        del _description['id']
-        del _description['image_url']
-        del _description['recommendations']
-        del _description['other_names']
-        del _description['creators']
-        # _description['description'] =
-        # str("<br>") + _description['description']
-        description = dict()
-        for key in _description:
-            description[humanize_str(str(key))] = _description[key]
+            details = {'description': 'None'}
+            try:
+                details['image_url'] = anime.poster
+            except:
+                details['image_url'] = "None lol. Idk why."
+        description = self.fix_description(dict(details))
         anime_details = scraper_handler.resolve(anime.link)
         episodes = list()
         _last_id = -1
@@ -141,18 +133,21 @@ class DetailView(View):
             "debug_txt": [x['epNum'] for x in episodes]
         })
 
-    def find_most_similar(self, original_txt, search_results_unfiltered):
-        highest_match = [0, -1]  # 0th term - match %, 1st term - ID
-        for item in search_results_unfiltered:
-            for i in item['titles']:
-                match = self.similar(original_txt, i)
-                if match > highest_match[0]:
-                    highest_match[0] = match
-                    highest_match[1] = item['id']
-        if highest_match[1] != -1:
-            return highest_match[1]
-        else:
-            return None
-
-    def similar(self, a, b):
-        return SequenceMatcher(None, a, b).ratio()
+    def fix_description(self, description):
+        if 'id' in description:
+            del description['id']
+        if 'image_url' in description:
+            del description['image_url']
+        if 'recommendations' in description:
+            del description['recommendations']
+        if 'other_names' in description:
+            del description['other_names']
+        if 'creators' in description:
+            del description['creators']
+        # description['description'] =
+        # str("<br>") + description['description']
+        new_description = dict()
+        if len(description) > 0:
+            for key in description:
+                new_description[humanize_str(str(key))] = description[key]
+        return new_description
