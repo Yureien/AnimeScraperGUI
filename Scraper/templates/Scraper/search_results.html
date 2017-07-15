@@ -4,9 +4,8 @@
 <h3 class="header center orange-text">Search Results</h3>
 <h5 class="header center light">You searched for: {{ search_text }}</h5>
 <br>
-{% if i_results or d_results %}
-{% for i in results_loop %}
-<h4 class="center">{{ i }}</h4>
+{% if d_results %}
+<h4 class="center">Search Results</h4>
 <br>
 <table class="highlight">
     <thead>
@@ -18,16 +17,6 @@
 	</tr>
     </thead>
     <tbody>
-	{% if i == "Information Search" %}
-	{% for item in i_results %}
-	<tr>
-	    <td>{{ item.title }}</td>
-	    <td>{{ item.language }}</td>
-	    <td>{{ item.host }}</td>
-	    <td><a href="{% url 'details' item.aid %}"><i class="material-icons">play_for_work</i></a></td>
-	</tr>
-	{% endfor %}
-	{% else %}
 	{% for item in d_results %}
 	<tr>
 	    <td>{{ item.title }}</td>
@@ -36,11 +25,9 @@
 	    <td><a href="{% url 'details' item.aid %}"><i class="material-icons">play_for_work</i></a></td>
 	</tr>
 	{% endfor %}
-	{% endif %}
     </tbody>
 </table>
 <br>
-{% endfor %}
 {% else %}
 <br>
 <h4 class="center">Nothing found :(</h4>

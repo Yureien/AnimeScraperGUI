@@ -7,43 +7,13 @@
 	<input id="search-text" type="text">
     </div>
     <div class="row s12 m6 center">
-	<div class="row">
-	    <div class="col s12 m6">
-		<div class="switch">
-		    <label>
-			Search for information
-			<input id="i_check" type="checkbox" disabled>
-			<span class="lever"></span>
-		    </label>
-		</div>
-	    </div>
-	    <div class="col s12 m6">
-		<div class="switch">
-		    <label>
-			Search for downloading
-			<input id="d_check" type="checkbox" checked="checked">
-			<span class="lever"></span>
-		    </label>
-		</div>
-	    </div>
-	</div>
-    </div>
-    <div class="row s12 m6 center">
 	<button class="waves-effect waves-light btn" id="search-btn">Search</button>
     </div>
     <script type="text/javascript">
      var search_url = "{% url 'search' 'temp-text' %}";
      $("#search-btn").click(function() {
 	 let search_text = $("#search-text").val();
-	 let i_checked = $("#i_check").prop("checked");
-	 let d_checked = $("#d_check").prop("checked");
 	 if (search_text) {
-	     if (i_checked && d_checked)
-		 search_text += "?i&d";
-	     else if (i_checked)
-		 search_text += "?i";
-	     else if (d_checked)
-		 search_text += "?d";
 	     window.open(search_url
 		 .replace("temp-text/", search_text), "_self");
 	 }

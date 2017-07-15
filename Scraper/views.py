@@ -20,25 +20,11 @@ def search_page(request):
 
 
 def search(request, search_txt):
+    d_results_unformatted = scraper_handler.search(search_txt)
     d_results = list()
-    # i_results = list() TODO: WIP.
-    search_result_types = list()
-    if request.GET:
-        if 'i' in request.GET:
-            search_result_types.append("Information Search")
-        if 'd' in request.GET:
-            d_results_unformatted = scraper_handler.search(search_txt)
-            for a in d_results_unformatted:
-                for b in a:
-                    d_results.append(b)
-            search_result_types.append("Download Search")
-    else:
-        d_results_unformatted = scraper_handler.search(search_txt)
-        for a in d_results_unformatted:
-            for b in a:
-                d_results.append(b)
-        search_result_types.append("Information Search")
-        search_result_types.append("Download Search")
+    for a in d_results_unformatted:
+        for b in a:
+            d_results.append(b)
     if d_results:
         for i in d_results:
             try:
@@ -55,13 +41,11 @@ def search(request, search_txt):
                     anime.poster = i['poster']
                 except KeyError:
                     anime.poster = None
-                i['aid'] = anime.aid
                 anime.save()
+                i['aid'] = anime.aid
     return render(request, "Scraper/search_results.html", {
         "search_text": search_txt,
-        "i_results": d_results,  # TODO: WIP.
         "d_results": d_results,
-        "results_loop": search_result_types,
     })
 
 
@@ -101,10 +85,8 @@ class DetailView(View):
     def get(self, request, anime_id):
         anime = get_object_or_404(AnimeResult, pk=anime_id)
         search_anime = info_handler.search(anime.name, True)[0]
-        if len(search_anime) <= 0:
-            search_anime = info_handler.search(anime.name, False)[0]
-            aid = self.find_most_similar(anime.name, search_anime)
-            details = info_handler.getDetailedInfo(aid)[0]
+        if len(search_anime) > 0:
+            details = info_handler.getDetailedInfo(search_anime[0]['id'])[0]
         else:
             details = {'description': 'None'}
             try:
