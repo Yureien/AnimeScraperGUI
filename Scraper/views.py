@@ -1,11 +1,15 @@
+import json
+from datetime import date
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect  # , HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
+from django.conf import settings
 
-from .models import AnimeResult
+from .models import AnimeResult, Detail, Episode
 
 from .anime_scrapers.scraper_handler import scraper_handler
 from .anime_scrapers.info_handler import info_handler
@@ -84,42 +88,67 @@ class DetailView(View):
 
     def get(self, request, anime_id):
         anime = get_object_or_404(AnimeResult, pk=anime_id)
-        search_anime = info_handler.search(anime.name, True)[0]
-        if len(search_anime) > 0:
-            details = info_handler.getDetailedInfo(search_anime[0]['id'])[0]
-        else:
-            details = {'description': 'None'}
-            try:
-                details['image_url'] = anime.poster
-            except:
-                details['image_url'] = "None lol. Idk why."
-        description = self.fix_description(dict(details))
-        anime_details = scraper_handler.resolve(anime.link)
-        episodes = list()
-        _last_id = -1
-        for x in anime_details['episodes']:
-            if _last_id == -1:
-                _last_id = x['epNum']
-                episodes.append(x)
+        try:
+            anime_detail = anime.detail
+            details = json.loads(anime_detail.information_json)
+        except ObjectDoesNotExist:
+            anime_detail = Detail(anime=anime)
+            search_anime = info_handler.search(anime.name, True)[0]
+            if len(search_anime) > 0:
+                details = info_handler.getDetailedInfo(
+                    search_anime[0]['id'])[0]
+                anime_detail.poster_url = details['image_url']
+                if 'image_url' in details:
+                    del details['image_url']
             else:
-                _id = x['epNum']
-                if _id > _last_id:
-                    episodes.append(x)
-                else:
-                    episodes.insert(0, x)
-                _last_id = _id
+                details = {'description': 'None'}
+                try:
+                    anime_detail.poster_url = details['image_url']
+                except:
+                    anime_detail.poster_url = "None."
+            anime_detail.information_json = json.dumps(details)
+            anime_detail.save_poster_from_url()
+            anime_detail.save()
+        description = self.fix_description(dict(details))
+
+        anime_episodes = anime.episode_set.all()
+        if len(anime_episodes) > 0 and \
+           (date.today() - anime_detail.episode_last_modified)\
+                .days <= 2:
+            _episodes = [json.loads(ep.episode_sources_json)
+                         for ep in anime_episodes]
+            ep_nums = [ep.episode_num for ep in anime_episodes]
+            episodes = [
+                {'epNum': ep.episode_num,
+                 'sources': json.loads(ep.episode_sources_json)}
+                for ep in anime_episodes
+            ]
+        else:
+            _episodes = scraper_handler.resolve(anime.link)['episodes']
+            ep_nums = [int(x['epNum']) for x in _episodes]
+            episodes = [x for (y, x) in
+                        sorted(list(zip(ep_nums, _episodes)),
+                               key=lambda pair: pair[0])]
+            for i in sorted(ep_nums):
+                anime_episode = Episode(anime=anime)
+                anime_episode.episode_num = i
+                anime_episode.episode_sources_json = \
+                    json.dumps(episodes[i-1]['sources'])
+                anime_episode.save()
+            anime_detail.episode_last_modified = date.today()
+            anime_detail.save()
+
         return render(request, "Scraper/view.html", {
             "title": anime.name.title(),
-            "pic_link": details['image_url'],
+            "poster_name": anime_detail.poster_name,
             "description": description,
-            "debug_txt": [x['epNum'] for x in episodes]
+            "ep_nums": sorted(ep_nums),
+            "debug_txt": episodes
         })
 
     def fix_description(self, description):
         if 'id' in description:
             del description['id']
-        if 'image_url' in description:
-            del description['image_url']
         if 'recommendations' in description:
             del description['recommendations']
         if 'other_names' in description:

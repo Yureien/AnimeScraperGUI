@@ -7,3 +7,4 @@ lxml
 demjson
 django
 django-celery
+Pillow

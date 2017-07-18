@@ -12,9 +12,13 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+# My constants
+MAX_EPISODE_CACHE_DAYS = 2
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_URL = "media/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -25,7 +29,7 @@ SECRET_KEY = '4d533xi_an_pzd8j&*#92(!(dc8zg3oc^()$rev+vtv^*pegcx'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.104', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.105', 'localhost']
 
 
 # Application definition
@@ -59,6 +63,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.media',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',

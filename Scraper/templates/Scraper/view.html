@@ -5,36 +5,7 @@
 <br><br>
 <div class="row">
     <div class="col s12 m3 center-align">
-	<img class="no-reload-on-fail" src="{{ pic_link }}" width='220px' alt="{{ title }}">
-	<script>
-	 $(function() {
-   var $images = $('.reload-on-fail');
-
-   if($images.length === 0 && window.imageLocator)
-     clearInterval(window.imageLocator);
-    window.imageLocator = setInterval(function() {
-        $images.each(function() {
-            $this = $(this);
-            if (!$this.data('src')) {
-                $this.data('src', $this.prop('src'));
-            }
-
-            $this.prop('src', $this.data('src') + '?timestamp=' + new Date().getTime());
-            console.log($this.prop('src'));
-        });
-    }, 500);
-   $('img.imageClassUpdateAtInterval').error(
-             function () {   
-                 // set a broken image
-                 $(this).unbind("error").attr("src", "/assets/broken.gif"); 
-                 // setting this up in relative
-                 // position
-                 $(this).css("position", "relative");
-                 $(this).apppend("<span>Error occured</span>");
-                 $(this).find("span").css({"position": "absolute", "background-color": "#252525", "padding": ".3em", "bottom": "0"});
-	     });
-	 });
-	</script>
+	<img src="http://{{ request.get_host }}/{{ MEDIA_URL }}images/{{ poster_name }}" width='220px' alt="{{ title }}">
 	<br>
     </div>
     <div class="col s12 m9">
@@ -48,5 +19,23 @@
 <div class="divider"></div>
 <br>
 <h4 class="header center orange-text">Episodes</h4>
+<div class="row center" style="padding:5%;">
+    <div class="col s12 m6">
+	<button class="waves-effect waves-light btn" id="play-btn" disabled>Play</button>
+    </div>
+    <div class="col s12 m6">
+	<button class="waves-effect waves-light btn" id="download-btn">Download</button>
+    </div>
+</div>
+<div class="row">
+    {% for i in ep_nums %}
+    <div class="col s2 m1">
+	<p>
+	    <input type="checkbox" id="ep-{{ i }}" />
+	    <label for="ep-{{ i }}">{{ i }}</label>
+	</p>
+    </div>
+    {% endfor %}
+</div>
 <p>{{ debug_txt }}</p>
 {% endblock %}

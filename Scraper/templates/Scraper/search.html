@@ -11,11 +11,19 @@
     </div>
     <script type="text/javascript">
      var search_url = "{% url 'search' 'temp-text' %}";
-     $("#search-btn").click(function() {
+     var search = function() {
 	 let search_text = $("#search-text").val();
 	 if (search_text) {
 	     window.open(search_url
 		 .replace("temp-text/", search_text), "_self");
+	 }
+     }
+     $("#search-btn").click(function() {
+	 search();
+     });
+     $(document).keypress(function(e) {
+	 if(e.which == 13) {
+             search();
 	 }
      });
     </script>
