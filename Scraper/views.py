@@ -2,12 +2,12 @@ import json
 from datetime import date
 
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect  # , HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseForbidden, \
+    HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
-from django.conf import settings
 
 from .models import AnimeResult, Detail, Episode
 
@@ -76,10 +76,17 @@ def logout_user(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-def humanize_str(string):
-    string = string.replace("_", " ")
-    string = string.title()
-    return string
+def download(request):
+    if 'd' in request.GET:
+        _download_list = request.GET['d'].split(",")
+        download_list = list()
+        for x in _download_list:
+            if x.startswith("ep-"):
+                download_list.append(int(x[3:]))
+            else:
+                return HttpResponseForbidden()
+        return HttpResponse(download_list)
+    return HttpResponseForbidden()
 
 
 class DetailView(View):
@@ -160,5 +167,10 @@ class DetailView(View):
         new_description = dict()
         if len(description) > 0:
             for key in description:
-                new_description[humanize_str(str(key))] = description[key]
+                new_description[self.humanize_str(str(key))] = description[key]
         return new_description
+
+    def humanize_str(self, string):
+        string = string.replace("_", " ")
+        string = string.title()
+        return string

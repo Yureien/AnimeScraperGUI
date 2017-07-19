@@ -21,21 +21,60 @@
 <h4 class="header center orange-text">Episodes</h4>
 <div class="row center" style="padding:5%;">
     <div class="col s12 m6">
-	<button class="waves-effect waves-light btn" id="play-btn" disabled>Play</button>
+	<button style="margin-bottom:2%;width:100%;"
+		class="waves-effect waves-light btn" id="play-btn" disabled>Play</button>
     </div>
     <div class="col s12 m6">
-	<button class="waves-effect waves-light btn" id="download-btn">Download</button>
+	<button style="margin-bottom:2%;width:100%;"
+		class="waves-effect waves-light btn" id="download-btn">Download</button>
+    </div>
+    <br>
+    <div class="col s12 m6">
+	<button style="margin-bottom:2%;width:100%;"
+		class="waves-effect waves-light btn" id="sall-cb">Select All</button>
+    </div>
+    <div class="col s12 m6">
+	<button style="margin-bottom:2%;width:100%;"
+		class="waves-effect waves-light btn" id="dall-cb">Deselect All</button>
     </div>
 </div>
-<div class="row">
+<div class="row" id="eps-cbs">
     {% for i in ep_nums %}
     <div class="col s2 m1">
 	<p>
-	    <input type="checkbox" id="ep-{{ i }}" />
+	    <input type="checkbox" id="ep-{{ i }}" class="ep-cb" />
 	    <label for="ep-{{ i }}">{{ i }}</label>
 	</p>
     </div>
     {% endfor %}
+    <script type="text/javascript">
+     $("#sall-cb").click(function() {
+	 ep_cbs = $("#eps-cbs").find(".ep-cb");
+	 for (var i=0, n = ep_cbs.length; i < n; i++) {
+	     ep_cbs[i].setAttribute("checked", "checked");
+	 }
+     });
+     $("#dall-cb").click(function() {
+	 ep_cbs = $("#eps-cbs").find(".ep-cb");
+	 for (var i=0, n = ep_cbs.length; i < n; i++) {
+	     ep_cbs[i].setAttribute("checked", ""); // IE. Wtf.
+	     ep_cbs[i].removeAttribute("checked"); // For other browsers...
+	 }
+     });
+     $("#download-btn").click(function() {
+	 ep_cbs = $("#eps-cbs").find(".ep-cb");
+	 let download_eps = "";
+	 for (var i=0, n = ep_cbs.length; i < n; i++) {
+	     if (ep_cbs[i].checked) {
+		 download_eps += ep_cbs[i].id + ",";
+	     }
+	 }
+	 if (download_eps) {
+	     download_eps = download_eps.substr(0, download_eps.length-1);
+	     window.open("{% url 'download' %}?d="+download_eps, "_self");
+	 }
+     });
+    </script>
 </div>
-<p>{{ debug_txt }}</p>
+<!--<p>{{ debug_txt }}</p>-->
 {% endblock %}
