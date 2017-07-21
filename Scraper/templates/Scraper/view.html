@@ -4,6 +4,16 @@
 <h3 class="header center orange-text">{{ title }}</h3>
 <br><br>
 <div class="row">
+    {% if info_message %}
+    <div class="row">
+	<div class="col s12">
+	    <div class="card-panel red">
+		<span class="white-text">{{ info_message }}</span>
+	    </div>
+	</div>
+    </div>
+    <br>
+    {% endif %}
     <div class="col s12 m3 center-align">
 	<img src="http://{{ request.get_host }}/{{ MEDIA_URL }}images/{{ poster_name }}" width='220px' alt="{{ title }}">
 	<br>
@@ -37,15 +47,27 @@
 	<button style="margin-bottom:2%;width:100%;"
 		class="waves-effect waves-light btn" id="dall-cb">Deselect All</button>
     </div>
+    <div class="col s12 center">
+	<p class="center"><i>Downloaded episodes are in bold. If the episode is downloaded, press it and then press play. You can download it on the device you are using after you press play (In the playing page, press "Download").</i></p>
+    </div>
 </div>
 <div class="row" id="eps-cbs">
     {% for i in ep_nums %}
+    {% if i in downloaded_eps %}
+    <div class="col s2 m1">
+	<strong><p>
+	    <input type="checkbox" id="ep-{{ i }}" class="ep-cb" />
+	    <label for="ep-{{ i }}" style="color: #222;">{{ i }}</label>
+	</p></strong>
+    </div>
+    {% else %}
     <div class="col s2 m1">
 	<p>
 	    <input type="checkbox" id="ep-{{ i }}" class="ep-cb" />
 	    <label for="ep-{{ i }}">{{ i }}</label>
 	</p>
     </div>
+    {% endif %}
     {% endfor %}
     <script type="text/javascript">
      $("#sall-cb").click(function() {
@@ -76,5 +98,5 @@
      });
     </script>
 </div>
-<!--<p>{{ debug_txt }}</p>-->
+<p>{{ debug_txt }}</p>
 {% endblock %}

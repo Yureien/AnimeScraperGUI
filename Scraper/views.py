@@ -2,10 +2,10 @@ import os
 import json
 from datetime import date
 from threading import Thread
+import logging
 
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseForbidden, \
-    HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
@@ -86,10 +86,16 @@ def _download(arg):
         os.mkdir(settings.DOWNLOAD_PATH)
     successful_downloads = list()
     for x in arg:
-        successful = download_handler.single_download(
-            x['sources'][0]['link'],
-            os.path.join(settings.DOWNLOAD_PATH, x['downloadName'])
-        )
+        successful = False
+        for i in x['sources']:
+            logging.debug(i['link'])
+            successful = download_handler.single_download(
+                i['link'],
+                os.path.join(settings.DOWNLOAD_PATH, x['downloadName'])
+            )
+            logging.debug(str(successful))
+            if successful:
+                break
         successful_downloads.append({
             "epNum": x['epNum'],
             "success": successful
@@ -121,7 +127,9 @@ def download(request, anime_id):
                     })
         download_thread = Thread(target=_download, args=(d_eps,))
         download_thread.start()
-        return HttpResponse("Downloading...\n\n" + str(d_eps))
+        msg = "Downloading episodes..." if d_eps else "Already downloaded."
+        request.session['details_download_msg'] = msg
+        return HttpResponseRedirect(reverse("details", args=(anime_id,)))
     return HttpResponseForbidden()
 
 
@@ -155,9 +163,9 @@ class DetailView(View):
         description = self.fix_description(dict(details))
 
         anime_episodes = anime.episode_set.all()
-        if len(anime_episodes) > 0 and \
+        if anime.episode_set.count() > 0 and \
            (date.today() - anime_detail.episode_last_modified)\
-                .days <= 2:
+                .days <= settings.MAX_EPISODE_CACHE_DAYS:
             _episodes = [json.loads(ep.episode_sources_json)
                          for ep in anime_episodes]
             ep_nums = [ep.episode_num for ep in anime_episodes]
@@ -167,6 +175,9 @@ class DetailView(View):
                 for ep in anime_episodes
             ]
         else:
+            if anime.episode_set.count() > 0:
+                for ep in anime.episode_set.all():
+                    ep.delete()
             _episodes = scraper_handler.resolve(anime.link)['episodes']
             ep_nums = [int(x['epNum']) for x in _episodes]
             episodes = [x for (y, x) in
@@ -181,13 +192,22 @@ class DetailView(View):
             anime_detail.episode_last_modified = date.today()
             anime_detail.save()
 
+        downloaded_eps = list()
+        for ep in anime.episode_set.all():
+            if ep.isDownloaded():
+                downloaded_eps.append(ep.episode_num)
+        info_msg = ""
+        if 'details_download_msg' in request.session:
+            info_msg = request.session.pop('details_download_msg')
+        
         return render(request, "Scraper/view.html", {
             "title": anime.name.title(),
             "poster_name": anime_detail.poster_name,
             "description": description,
             "ep_nums": sorted(ep_nums),
-            "debug_txt": episodes,
+            "downloaded_eps": downloaded_eps,
             "aid": anime_id,
+            "info_message": info_msg
         })
 
     def fix_description(self, description):
