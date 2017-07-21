@@ -1,8 +1,8 @@
 # Anime Scraper (GUI)
-This is a GUI version of [anime-scrapers](https://github.com/jQwotos/anime-scrapers) with extra features!
-It was built using Python, Django, Python Requests module, and Python BeautifulSoup4 module.
+This is a GUI version of [anime_scrapers](https://github.com/jQwotos/anime_scrapers) with extra features!
+It was built using Python, Django, Python Requests module, and Python BeautifulSoup4 module, and some other modules (all are listed in requirements.txt).
 
-With this, you can stream or download animes from many sites, which are given in the [anime-scrapers](https://github.com/jQwotos/anime-scrapers) repository.
+With this, you can stream or download animes from many sites, which are given in the [anime_scrapers](https://github.com/jQwotos/anime_scrapers) repository.
 
 This is actually a web UI, in other words, a local server. So, you can open the server website on any device on the local network by installing this repo on a PC, or even remotely if you configure it that way (Instructions not included for remote setup. Just a tip: Use localtunnel). 
 
@@ -32,7 +32,8 @@ python manage.py migrate
 ```
 sudo ./run
 ```
-**(Any OS users with or without admin account)** To run on any port of your choice -
+
+**RECOMMENDED - (Any OS users with or without admin account)** To run on any port of your choice -
 ```
 python manage.py runserver <PORT_NUMBER_FROM_1024_TO_65536>
 ```
@@ -41,6 +42,8 @@ Then go to [localhost](http://localhost) from the PC it is installed in.
 ## Contribution
 
 Fork, clone, make changes, push, create PR. I will accept the PR or ask you to make changes if required.
+
+I will be very, very happy if you make a PR! :)
 
 ## Credits
 - [FadedCoder](https://github.com/FadedCoder)
