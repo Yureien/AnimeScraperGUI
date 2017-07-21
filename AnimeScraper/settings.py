@@ -12,13 +12,15 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
-# My constants
-MAX_EPISODE_CACHE_DAYS = 2
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIA_URL = "media/"
+
+# My constants
+MAX_EPISODE_CACHE_DAYS = 2
+DOWNLOAD_PATH = os.path.join(BASE_DIR, "media/videos/")
+MAX_PARALLEL_DOWNLOAD = 2
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/

@@ -1,5 +1,7 @@
+import os
 import json
 from datetime import date
+from threading import Thread
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseForbidden, \
@@ -8,11 +10,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
+from django.conf import settings
 
 from .models import AnimeResult, Detail, Episode
 
 from .anime_scrapers.scraper_handler import scraper_handler
 from .anime_scrapers.info_handler import info_handler
+from .anime_scrapers.download_handler import download_handler
 
 
 def index(request):
@@ -76,6 +80,23 @@ def logout_user(request):
     return HttpResponseRedirect(reverse("index"))
 
 
+# TODO: Create a Class.
+def _download(arg):
+    if not os.path.isdir(settings.DOWNLOAD_PATH):
+        os.mkdir(settings.DOWNLOAD_PATH)
+    successful_downloads = list()
+    for x in arg:
+        successful = download_handler.single_download(
+            x['sources'][0]['link'],
+            os.path.join(settings.DOWNLOAD_PATH, x['downloadName'])
+        )
+        successful_downloads.append({
+            "epNum": x['epNum'],
+            "success": successful
+        })
+    return successful_downloads
+
+
 def download(request, anime_id):
     if not anime_id:
         return HttpResponseForbidden()
@@ -92,8 +113,15 @@ def download(request, anime_id):
         d_eps = list()
         for e in episodes:
             if e.episode_num in download_list:
-                d_eps.append(json.loads(e.episode_sources_json))
-        return HttpResponse(d_eps)
+                if not e.isDownloaded():
+                    d_eps.append({
+                        "epNum": e.episode_num,
+                        "downloadName": e.getName(),
+                        "sources": json.loads(e.episode_sources_json),
+                    })
+        download_thread = Thread(target=_download, args=(d_eps,))
+        download_thread.start()
+        return HttpResponse("Downloading...\n\n" + str(d_eps))
     return HttpResponseForbidden()
 
 

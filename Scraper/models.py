@@ -57,5 +57,13 @@ class Episode(models.Model):
     episode_sources_json = models.TextField()
 
     def __str__(self):
-        return "%d: %s - Ep %d" % \
+        return "%d: %s - Episode %d" % \
             (self.anime.aid, self.anime.name, self.episode_num)
+
+    def getName(self):
+        return "%s - Episode %d.mp4" % (self.anime.name, self.episode_num)
+
+    def isDownloaded(self):
+        if os.path.isfile(settings.DOWNLOAD_PATH + self.getName()):
+            return True
+        return False
