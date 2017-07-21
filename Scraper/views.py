@@ -76,7 +76,9 @@ def logout_user(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-def download(request):
+def download(request, anime_id):
+    if not anime_id:
+        return HttpResponseForbidden()
     if 'd' in request.GET:
         _download_list = request.GET['d'].split(",")
         download_list = list()
@@ -85,7 +87,13 @@ def download(request):
                 download_list.append(int(x[3:]))
             else:
                 return HttpResponseForbidden()
-        return HttpResponse(download_list)
+        anime = get_object_or_404(AnimeResult, pk=anime_id)
+        episodes = anime.episode_set.all()
+        d_eps = list()
+        for e in episodes:
+            if e.episode_num in download_list:
+                d_eps.append(json.loads(e.episode_sources_json))
+        return HttpResponse(d_eps)
     return HttpResponseForbidden()
 
 
@@ -150,7 +158,8 @@ class DetailView(View):
             "poster_name": anime_detail.poster_name,
             "description": description,
             "ep_nums": sorted(ep_nums),
-            "debug_txt": episodes
+            "debug_txt": episodes,
+            "aid": anime_id,
         })
 
     def fix_description(self, description):

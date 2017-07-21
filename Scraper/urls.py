@@ -12,5 +12,5 @@ urlpatterns = [
     url(r'^details/(?P<anime_id>[0-9]+)/$',
         views.DetailView.as_view(),
         name='details'),
-    url(r'^download/$', views.download, name='download'),
+    url(r'^download/(?P<anime_id>[0-9]+)/$', views.download, name='download'),
 ]

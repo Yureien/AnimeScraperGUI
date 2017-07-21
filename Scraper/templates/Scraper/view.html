@@ -71,7 +71,7 @@
 	 }
 	 if (download_eps) {
 	     download_eps = download_eps.substr(0, download_eps.length-1);
-	     window.open("{% url 'download' %}?d="+download_eps, "_self");
+	     window.open("{% url 'download' aid %}?d="+download_eps, "_self");
 	 }
      });
     </script>
