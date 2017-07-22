@@ -8,6 +8,8 @@ This is actually a web UI, in other words, a local server. So, you can open the 
 
 **The downloaded videos are in `media/videos/` folder, which is automatically created.**
 
+**NOTE: The videos are downloaded locally on host PC in the "details" page. To download it locally, press 'Download Local' in the plat page.**
+
 Remember, this is a WIP.
 ## Installation
 
