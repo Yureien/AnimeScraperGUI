@@ -119,7 +119,7 @@ def play(request, anime_id, episode_id):
     return render(request, "Scraper/play.html", {
         "anime_name": anime.name,
         "episode_name": episode.getName(),
-        "anime_poster": anime.poster
+        "anime_poster": anime.detail.poster_name
     })
 
 
