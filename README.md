@@ -1,4 +1,7 @@
 # Anime Scraper (GUI)
+
+**As of when this was last updated, the following sources work: AnimeHeaven. More sources will be added on/repaired in the future**
+
 This is a GUI version of [anime_scrapers](https://github.com/jQwotos/anime_scrapers) with extra features!
 It was built using Python, Django, Python Requests module, and Python BeautifulSoup4 module, and some other modules (all are listed in requirements.txt).
 
