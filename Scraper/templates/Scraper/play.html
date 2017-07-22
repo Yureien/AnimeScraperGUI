@@ -3,18 +3,17 @@
 {% block title %}Playing {{ anime_name }}{% endblock %}
 {% block extra_static %}
 <link rel="stylesheet" href="{% static 'Scraper/css/video-js.css' %}" />
-<link rel="stylesheet" href="{% static 'Scraper/css/videojs-sublime-skin.min.css' %}" />
-<link rel="stylesheet" href="{% static 'Scraper/css/videojs-resume.css' %}" />
+<link rel="stylesheet" href="{% static 'Scraper/css/videojs-resume.min.css' %}" />
 <script type="text/javascript" src="{% static 'Scraper/js/videojs-ie8.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'Scraper/js/video.js' %}"></script>
 <script type="text/javascript" src="{% static 'Scraper/js/store.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'Scraper/js/videojs-remember.js' %}"></script>
+<script type="text/javascript" src="{% static 'Scraper/js/videojs-resume.min.js' %}"></script>
 {% endblock %}
 {% block content %}
 <h2 class="header center orange-text">{{ anime_name }}</h2>
 <div class="col s12 center">
     <div class="row s12 center">
-	<video id="anime-video-player" class="video-js vjs-sublime-skin" controls preload="auto"
+	<video id="video-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto"
 	       poster="http://{{ request.get_host }}/{{ MEDIA_URL }}images/{{ anime_poster }}" data-setup='{"fluid": true}'>
 	    <source src="{% url 'v_stream' episode_name %}" type='video/mp4'>
 	    <p class="vjs-no-js">
@@ -22,7 +21,8 @@
 		<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
 	    </p>
 	</video>
-	<p>{{ episode_url }}</p>
+	<script type="text/javascript">
+	</script>
     </div>
     <div class="row s12 m6 right">
 	<button class="waves-effect waves-light btn-large" id="download-btn" style="margin-top:1%;width:100%;">Download Local</button>
@@ -31,7 +31,13 @@
      $("#download-btn").click(function() {
 	 window.open("{% url 'v_download' episode_name %}", "_self");
      });
-     videojs(document.querySelector('anime-video-player')).remember({"localStorageKey": "videojs.remember.myvideo"});
+     var player = videojs('video-player', {
+     }, function() {
+         player.Resume({
+	     uuid: '{{ episode_name }}',
+	     playbackOffset: 5
+         });
+     });
     </script>
 </div>
 {% endblock %}
