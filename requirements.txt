@@ -8,3 +8,4 @@ demjson
 django
 django-celery
 Pillow
+django-ranged-response

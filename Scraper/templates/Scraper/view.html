@@ -32,7 +32,7 @@
 <div class="row center" style="padding:5%;">
     <div class="col s12 m6">
 	<button style="margin-bottom:2%;width:100%;"
-		class="waves-effect waves-light btn" id="play-btn" disabled>Play</button>
+		class="waves-effect waves-light btn" id="play-btn">Play</button>
     </div>
     <div class="col s12 m6">
 	<button style="margin-bottom:2%;width:100%;"
@@ -56,7 +56,7 @@
     {% if i in downloaded_eps %}
     <div class="col s2 m1">
 	<strong><p>
-	    <input type="checkbox" id="ep-{{ i }}" class="ep-cb" />
+	    <input type="checkbox" id="ep-{{ i }}" class="ep-cb downloaded" />
 	    <label for="ep-{{ i }}" style="color: #222;">{{ i }}</label>
 	</p></strong>
     </div>
@@ -86,7 +86,7 @@
      $("#download-btn").click(function() {
 	 ep_cbs = $("#eps-cbs").find(".ep-cb");
 	 let download_eps = "";
-	 for (var i=0, n = ep_cbs.length; i < n; i++) {
+	 for (var i = 0, n = ep_cbs.length; i < n; i++) {
 	     if (ep_cbs[i].checked) {
 		 download_eps += ep_cbs[i].id + ",";
 	     }
@@ -94,6 +94,22 @@
 	 if (download_eps) {
 	     download_eps = download_eps.substr(0, download_eps.length-1);
 	     window.open("{% url 'download' aid %}?d="+download_eps, "_self");
+	 }
+     });
+     $("#play-btn").click(function() {
+	 ep_cbs = $("#eps-cbs").find(".ep-cb");
+	 let play_ep = -1;
+	 for (var i = 0, n = ep_cbs.length; i < n; i++) {
+	     if (ep_cbs[i].checked && $("#"+ep_cbs[i].id).hasClass("downloaded")) {
+		 play_ep = ep_cbs[i].id.substr(3, ep_cbs[i].length);
+		 break;
+	     }
+	 }
+	 if (play_ep != -1) {
+	     let play_url = "{% url 'play' aid -1 %}";
+	     window.open(play_url.replace("-1", play_ep), "_self");
+	 } else {
+	     window.alert("Please play ONLY downloaded episodes. Or download them first.");
 	 }
      });
     </script>

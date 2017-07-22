@@ -1,16 +1,19 @@
 import os
 import json
+import logging
+import mimetypes
 from datetime import date
 from threading import Thread
-import logging
 
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponseForbidden, \
+    HttpResponseNotFound
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 from django.conf import settings
+from ranged_response import RangedFileResponse
 
 from .models import AnimeResult, Detail, Episode
 
@@ -40,7 +43,7 @@ def search(request, search_txt):
                 i['aid'] = anime.aid
             except ObjectDoesNotExist:
                 anime = AnimeResult(
-                    name=i['title'],
+                    name=i['title'].title(),
                     host=i['host'],
                     language=i['language'],
                     link=i['link'],
@@ -78,6 +81,46 @@ def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
     return HttpResponseRedirect(reverse("index"))
+
+
+def video_stream(request, video_file):
+    _file = settings.DOWNLOAD_PATH + video_file
+    if not os.path.isfile(_file):
+        return HttpResponseNotFound()
+    response = RangedFileResponse(
+        request, open(_file, 'rb'),
+        content_type=mimetypes.guess_type(_file)[0]
+    )
+    response['Content-Length'] = os.path.getsize(_file)
+    return response
+
+
+def video_download(request, video_file):
+    _file = settings.DOWNLOAD_PATH + video_file
+    if not os.path.isfile(_file):
+        return HttpResponseNotFound()
+    response = RangedFileResponse(
+        request, open(_file, 'rb'),
+        content_type=mimetypes.guess_type(_file)[0]
+    )
+    response['Content-Length'] = os.path.getsize(_file)
+    response['Content-Disposition'] = 'attachment; filename="%s"' % video_file
+    return response
+
+
+def play(request, anime_id, episode_id):
+    anime = get_object_or_404(AnimeResult, pk=anime_id)
+    try:
+        episode = anime.episode_set.get(episode_num=episode_id)
+        if not episode.isDownloaded():
+            return HttpResponseForbidden()
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
+    return render(request, "Scraper/play.html", {
+        "anime_name": anime.name,
+        "episode_name": episode.getName(),
+        "anime_poster": anime.poster
+    })
 
 
 # TODO: Create a Class.
@@ -130,7 +173,7 @@ def download(request, anime_id):
         msg = "Downloading episodes..." if d_eps else "Already downloaded."
         request.session['details_download_msg'] = msg
         return HttpResponseRedirect(reverse("details", args=(anime_id,)))
-    return HttpResponseForbidden()
+    return HttpResponseNotFound()
 
 
 class DetailView(View):
@@ -199,8 +242,8 @@ class DetailView(View):
         info_msg = ""
         if 'details_download_msg' in request.session:
             info_msg = request.session.pop('details_download_msg')
-        
-        return render(request, "Scraper/view.html", {
+
+        return render(request, self.template_name, {
             "title": anime.name.title(),
             "poster_name": anime_detail.poster_name,
             "description": description,
