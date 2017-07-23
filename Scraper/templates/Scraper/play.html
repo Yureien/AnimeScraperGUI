@@ -14,7 +14,7 @@
 <div class="col s12 center">
     <div class="row s12 center">
 	<video id="video-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto"
-	       poster="http://{{ request.get_host }}/{{ MEDIA_URL }}images/{{ anime_poster }}" data-setup='{"fluid": true}'>
+	       poster="{% url 'media' 'images/'|add:anime_poster %}" data-setup='{"fluid": true}'>
 	    <source src="{% url 'v_stream' episode_name %}" type='video/mp4'>
 	    <p class="vjs-no-js">
 		To view this video please enable JavaScript, and consider upgrading to a web browser that

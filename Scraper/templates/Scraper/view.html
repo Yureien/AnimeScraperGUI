@@ -15,7 +15,7 @@
     <br>
     {% endif %}
     <div class="col s12 m3 center-align">
-	<img src="http://{{ request.get_host }}/{{ MEDIA_URL }}images/{{ poster_name }}" width='220px' alt="{{ title }}">
+	<img src="{% url 'media' 'images/'|add:poster_name %}" width='220px' alt="{{ title }}">
 	<br>
     </div>
     <div class="col s12 m9">

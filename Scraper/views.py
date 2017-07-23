@@ -1,7 +1,6 @@
 import os
 import json
 import logging
-import mimetypes
 from datetime import date
 from threading import Thread
 
@@ -13,7 +12,6 @@ from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 from django.conf import settings
-from ranged_response import RangedFileResponse
 
 from .models import AnimeResult, Detail, Episode
 
@@ -81,31 +79,6 @@ def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
     return HttpResponseRedirect(reverse("index"))
-
-
-def video_stream(request, video_file):
-    _file = settings.DOWNLOAD_PATH + video_file
-    if not os.path.isfile(_file):
-        return HttpResponseNotFound()
-    response = RangedFileResponse(
-        request, open(_file, 'rb'),
-        content_type=mimetypes.guess_type(_file)[0]
-    )
-    response['Content-Length'] = os.path.getsize(_file)
-    return response
-
-
-def video_download(request, video_file):
-    _file = settings.DOWNLOAD_PATH + video_file
-    if not os.path.isfile(_file):
-        return HttpResponseNotFound()
-    response = RangedFileResponse(
-        request, open(_file, 'rb'),
-        content_type=mimetypes.guess_type(_file)[0]
-    )
-    response['Content-Length'] = os.path.getsize(_file)
-    response['Content-Disposition'] = 'attachment; filename="%s"' % video_file
-    return response
 
 
 def play(request, anime_id, episode_id):

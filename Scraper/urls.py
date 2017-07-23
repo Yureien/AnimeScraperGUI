@@ -14,9 +14,4 @@ urlpatterns = [
     url(r'^download/(?P<anime_id>[0-9]+)/$', views.download, name='download'),
     url(r'^play/(?P<anime_id>[0-9]+)/(?P<episode_id>[0-9-]+)/$',
         views.play, name='play'),
-    url(r'^videos/(?P<video_file>[0-9a-zA-Z _!@$|:;&*()"\'.,<>+=`-]+)/$',
-        views.video_stream, name='v_stream'),
-    url(r'^videos/download/' +
-        '(?P<video_file>[0-9a-zA-Z _!@$|:;&*()"\'.,<>+=`-]+)/$',
-        views.video_download, name='v_download'),
 ]
