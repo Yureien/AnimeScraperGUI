@@ -19,7 +19,7 @@ MEDIA_URL = "media/"
 
 # My constants
 MAX_EPISODE_CACHE_DAYS = 2
-DOWNLOAD_PATH = os.path.join(BASE_DIR, "media/videos/")
+DOWNLOAD_PATH = os.path.join(MEDIA_ROOT, "videos/")
 MAX_PARALLEL_DOWNLOAD = 2
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +29,7 @@ MAX_PARALLEL_DOWNLOAD = 2
 SECRET_KEY = '4d533xi_an_pzd8j&*#92(!(dc8zg3oc^()$rev+vtv^*pegcx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.105', 'localhost']
 
