@@ -9,7 +9,7 @@ With this, you can stream or download animes from many sites, which are given in
 
 This is actually a web UI, in other words, a local server. So, you can open the server website on any device on the local network by installing this repo on a PC, or even remotely if you configure it that way (Instructions not included for remote setup. Just a tip: Use localtunnel).
 
-**IMPORTANT:** *Please note that this server was made for local use personally. The security standards are low. If you wish to use it publicly/with friends who want to hack you, please configure this with a robust web server such as [Apache](https://httpd.apache.org).*
+**IMPORTANT:** *Please note that this server was made for local use personally. The security standards are low. If you wish to use it publicly/with friends who want to hack you, please configure this with a robust web server such as [Apache](https://httpd.apache.org). Also go to AnimeScraper/settings.py and set the required variables for production.*
 
 **The downloaded videos are in `media/videos/` folder, which is automatically created.**
 

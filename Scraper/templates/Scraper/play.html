@@ -2,12 +2,12 @@
 {% load staticfiles %}
 {% block title %}Playing {{ anime_name }}{% endblock %}
 {% block extra_static %}
-<link rel="stylesheet" href="{% static 'Scraper/css/video-js.css' %}" />
-<link rel="stylesheet" href="{% static 'Scraper/css/videojs-resume.min.css' %}" />
-<script type="text/javascript" src="{% static 'Scraper/js/videojs-ie8.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'Scraper/js/video.js' %}"></script>
-<script type="text/javascript" src="{% static 'Scraper/js/store.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'Scraper/js/videojs-resume.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'Scraper/3rd-party/css/video-js.css' %}" />
+<link rel="stylesheet" href="{% static 'Scraper/3rd-party/css/videojs-resume.min.css' %}" />
+<script type="text/javascript" src="{% static 'Scraper/3rd-party/js/videojs-ie8.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'Scraper/3rd-party/js/video.js' %}"></script>
+<script type="text/javascript" src="{% static 'Scraper/3rd-party/js/store.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'Scraper/3rd-party/js/videojs-resume.min.js' %}"></script>
 {% endblock %}
 {% block content %}
 <h2 class="header center orange-text">{{ anime_name }}</h2>
