@@ -1,5 +1,6 @@
 #!/bin/sh
 
-# Runs the server at this PC's IP address(es) -> http://192.168.0.105/ and http://localhost/
+# USING PORT 8080.
+# Runs the server at this PC's IP address(es) -> http://192.168.0.105:8080/ and http://localhost:8080/
 
-python3 manage.py runserver 0.0.0.0:80
+python3 manage.py runserver 0.0.0.0:8080
