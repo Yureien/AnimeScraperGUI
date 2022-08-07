@@ -57,5 +57,5 @@ Fork, clone, make changes, push, create PR. I will accept the PR or ask you to m
 I will be very, very happy if you make a PR! :)
 
 ## Credits
-- [FadedCoder](https://github.com/FadedCoder)
+- [Yureien](https://github.com/Yureien)
 - [jQwotos](https://github.com/jQwotos)
